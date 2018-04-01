@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.qinnan.user.dao.UserDao">
+<resultMap type="org.qinnan.user.entity.User" id="userMap">
+<id property="userId" column="user_id"></id>
+<result property="username" column="username"></result>
+<result property="email" column="email"></result>
+<result property="phoneNum" column="phone_num"></result>
+<result property="address" column="address"></result>
+<result property="birthDay" column="birthDay"></result>
+</resultMap>
+<sql id="allcolumn">
+user_id,username,email,phone_num,address,birthDay
+</sql>
+<sql id="insertColumn">
+username,email,phone_num,address,birthDay
+</sql>
+		<select id="getUserById" resultMap="userMap">
+		select 
+		<include refid="allcolumn"></include>
+		 from m_user where user_id = #{userId}
+		</select>
+		
+		<select id="getUserBy" resultMap="userMap">
+		select 
+		<include refid="allcolumn"></include>
+		 from m_user
+		 <where>
+		 <if test="userId != null and userId != ''">
+		  and user_id = #{userId}
+		 </if>
+		 <if test="username != null and username != ''">
+		  and username like '%#{userId}%'
+		 </if>
+		 <if test="email != null and email != ''">
+		  and email = #{email}
+		 </if>
+		 <if test="phoneNum != null and phoneNum != ''">
+		  and phone_num = #{phoneNum}
+		 </if>
+		 <if test="address != null and address != ''">
+		  and address = #{address}
+		 </if>
+		 </where>
+		</select>
+
+
+		<insert id="insert" parameterType="org.qinnan.user.entity.User">
+		insert into m_user(
+		<include refid="insertColumn"></include>
+		)
+		values(
+		  #{username},
+		  #{email},
+		  #{phoneNum},
+		  #{address},
+		  #{birthDay}
+		     )
+		</insert>
+		
+		<update id="update" parameterType="org.qinnan.user.entity.User">
+		update m_user
+		<set>
+		<if test="username !=null and username !=''">
+		username = #{username},
+		</if>
+		<if test="email !=null and email !=''">
+		email = #{email},
+		</if>
+		<if test="phoneNum !=null and phoneNum !=''">
+		phone_num = #{phoneNum},
+		</if>
+		<if test="address !=null and address !=''">
+		address = #{address},
+		</if>
+		<if test="birthDay !=null and birthDay !=''">
+		birthDay = #{birthDay},
+		</if>
+		</set>
+		where
+		user_id = #{userId}
+		</update>
+</mapper>
